@@ -1,11 +1,16 @@
 import React from "react";
 import DashboardProvider from "./provider";
+import AuthProvider from "@/provider/provider";
 
-function DashboardLayout() {
+function DashboardLayout({ children }) {
   return (
-    <DashboardProvider>
-      <div>DashboardLayout</div>
-    </DashboardProvider>
+    <AuthProvider>
+      <div className="bg-secondary">
+        <DashboardProvider>
+          <div>{children}</div>
+        </DashboardProvider>
+      </div>
+    </AuthProvider>
   );
 }
 

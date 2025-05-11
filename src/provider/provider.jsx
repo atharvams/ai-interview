@@ -1,10 +1,10 @@
 "use client";
 import { supabase } from "@/services/supabaseClient";
 import { useContext, useEffect, useState } from "react";
-import { userDetailsContext } from "@/contexts/userContext";
+import { UserDetailsContext } from "@/contexts/userContext";
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState();
 
   useEffect(() => {
     initializeUser();
@@ -15,43 +15,42 @@ function AuthProvider({ children }) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    console.log(user); //TODO: REMOVE IT
-
     let { data: users, error } = await supabase
       .from("users")
       .select("*")
       .eq("email", user?.email);
-    console.log(users); //TODO: REMOVE IT
 
     if (!users || users.length == 0) {
       const { data, error } = await supabase.from("users").insert([
         {
           email: user?.email,
           username: user?.user_metadata?.name,
-          picture: user?.user_metadata?.picture,
+          picture: user?.user_metadata?.avatar_url,
         },
       ]);
-
-      console.log(data); //TODO: REMOVE IT
 
       if (error) {
         console.error("Error while inserting user!");
         return;
       }
 
+      console.log("new user data:");
+      console.log(data); //TODO: REMOVE IT
       setUser(data);
+
       return;
     }
-
+    console.log("Existing user data:");
+    console.log(users[0])
     setUser(users[0]);
     return;
   }
 
   return (
     <>
-      <userDetailsContext.Provider value={{ user }}>
+      <UserDetailsContext.Provider value={{ user, setUser }}>
         {children}
-      </userDetailsContext.Provider>
+      </UserDetailsContext.Provider>
     </>
   );
 }
@@ -59,6 +58,6 @@ function AuthProvider({ children }) {
 export default AuthProvider;
 
 export const useUser = () => {
-  const userContextToExport = useContext(userDetailsContext);
+  const userContextToExport = useContext(UserDetailsContext);
   return userContextToExport;
 };

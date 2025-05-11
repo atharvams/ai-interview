@@ -6,9 +6,9 @@ function DashboardProvider({ children }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main>
+      <main className="w-full">
         <SidebarTrigger />
-        {children}
+        <div className="w-full p-10">{children}</div>
       </main>
     </SidebarProvider>
   );
