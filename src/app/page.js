@@ -1,11 +1,19 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import AuthProvider from "@/provider/provider";
+import { supabase } from "@/services/supabaseClient";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
-   <div>
-    <h1>THis is test app!</h1>
-    <Button>Click me</Button>
-   </div>
+    <div>
+      <AuthProvider>
+        <h1>THis is test app!</h1>
+        <Button>Logout</Button>
+      </AuthProvider>
+    </div>
   );
 }
