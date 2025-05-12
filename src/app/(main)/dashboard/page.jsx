@@ -6,7 +6,7 @@ import React from "react";
 function DashboardPage() {
   return (
     <>
-      <WelcomeHeader />
+      {/* <WelcomeHeader /> */}
       <h2 className="my-4 text-2xl font-bold">Dashboard</h2>
       <DashboardScheduleInterviewOptions />
       <h2 className="my-4 text-2xl font-bold">Recent Interviews</h2>
