@@ -8,6 +8,7 @@ function DashboardLayout({ children }) {
       <div className="bg-secondary">
         <DashboardProvider>
           <div>{children}</div>
+          
         </DashboardProvider>
       </div>
     </AuthProvider>

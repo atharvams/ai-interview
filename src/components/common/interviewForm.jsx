@@ -10,10 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { InterviewType } from "@/services/constants";
-import { Butterfly_Kids } from "next/font/google";
 import { Button } from "../ui/button";
 
-function InterviewForm({ handleInterviewFromData }) {
+function InterviewForm({ handleInterviewFromData, gotoNext, formData }) {
   const [interviewType, setInterviewType] = useState([]);
 
   const addInterviewType = (type) => {
@@ -21,10 +20,11 @@ function InterviewForm({ handleInterviewFromData }) {
     if (!data) {
       setInterviewType((prev) => [...prev, type]);
     } else {
-      const result = interviewType.filter((item) => item != type);
+      const result = interviewType.filter((item) => item !== type);
       setInterviewType(result);
     }
   };
+
   useEffect(() => {
     if (interviewType) {
       handleInterviewFromData("interviewType", interviewType);
@@ -39,6 +39,7 @@ function InterviewForm({ handleInterviewFromData }) {
           onChange={(e) => {
             handleInterviewFromData("jobPosition", e.target.value);
           }}
+          value={formData?.jobPosition || ""}
           placeholder="e.g. Full Stack Developer"
           className="mt-2"
         />
@@ -46,6 +47,7 @@ function InterviewForm({ handleInterviewFromData }) {
       <div className="mt-5">
         <h2 className="text-sm font-medium">Job Description</h2>
         <Textarea
+          value={formData?.jobDescription || ""}
           onChange={(e) => {
             handleInterviewFromData("jobDescription", e.target.value);
           }}
@@ -56,6 +58,7 @@ function InterviewForm({ handleInterviewFromData }) {
       <div className="mt-5">
         <h2 className="text-sm font-medium">Interview Duration</h2>
         <Select
+          value={formData?.interviewDuration || ""}
           onValueChange={(e) => {
             handleInterviewFromData("interviewDuration", e);
           }}
@@ -92,7 +95,7 @@ function InterviewForm({ handleInterviewFromData }) {
           ))}
         </div>
       </div>
-      <div className="flex justify-center items-center mt-7">
+      <div onClick={gotoNext} className="flex justify-center items-center mt-7">
         <Button className={"w-full cursor-pointer"}>Generate Interview</Button>
       </div>
     </div>
