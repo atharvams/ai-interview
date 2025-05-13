@@ -10,7 +10,6 @@ import { InterviewDataContext } from "@/contexts/interviewDataContext";
 import { useRouter } from "next/navigation";
 
 function InterviewJoinPage() {
-
   const { interviewId } = useParams();
   const [userData, setUserData] = useState();
   const [dataLoading, setDataLoading] = useState(false);
@@ -48,7 +47,10 @@ function InterviewJoinPage() {
         .select("*")
         .eq("interviewId", interviewId);
 
-      setInterviewData(interviews);
+      setInterviewData({
+        userName: username,
+        interviewData: interviews,
+      });
       setDataLoading(false);
       router.push("/interview/" + interviewId + "/start");
     } catch (error) {
