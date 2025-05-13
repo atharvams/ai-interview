@@ -76,16 +76,18 @@ function QuestionList({ formData, gotoPrevious, gotoNext }) {
           <div className="p-5 rounded-xl bg-white border border-amber-300 flex flex-col gap-4">
             <QuestionContainer questions={questions} />
           </div>
-          <div className="flex justify-center m-5">
-            <Button
-              onClick={onFinish}
-              className={"w-full cursor-pointer"}
-            >
-              Finish
-            </Button>
-          </div>
         </>
       )}
+      <div className="flex justify-center m-5">
+        <Button
+          onClick={onFinish}
+          className={"w-full cursor-pointer"}
+          disabled={saveQuestionLoading}
+        >
+          {saveQuestionLoading && <Loader2Icon className="animate-spin" />}
+          Finish
+        </Button>
+      </div>
     </div>
   );
 }
