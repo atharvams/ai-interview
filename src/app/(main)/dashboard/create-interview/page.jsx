@@ -6,10 +6,12 @@ import { Progress } from "@/components/ui/progress";
 import InterviewForm from "@/components/common/interviewForm";
 import QuestionList from "@/components/common/questionList";
 import { toast } from "sonner";
+import InterviewLink from "@/components/common/interviewLink";
 
 function CreateInterview() {
   const router = useRouter();
-  const [progressSteps, setProgresSteps] = useState(1); //TODO: Total steps 5
+  const [progressSteps, setProgresSteps] = useState(1);
+  const [interviewIdToLink, setInterviewIdToLink] = useState();
 
   const [formData, setFormData] = useState({
     jobPosition: "",
@@ -45,6 +47,11 @@ function CreateInterview() {
     }
   };
 
+  const onCreateLink = (interivewId) => {
+    setInterviewIdToLink(interivewId);
+    setProgresSteps(progressSteps + 1);
+  };
+
   const validateFormData = () => {
     if (!formData.jobPosition || formData.jobPosition.trim() === "") {
       toast("Please enter a job position");
@@ -69,21 +76,30 @@ function CreateInterview() {
         <ArrowLeft onClick={() => router.back()} className="cursor-pointer" />
         <h2 className="font-bold text-2xl pl-3">Create new interview</h2>
       </div>
-      <Progress value={progressSteps * 20} className="my-5" />
-      {progressSteps == 1 && 
+      <Progress value={progressSteps * 33.33} className="my-5" />
+      {progressSteps == 1 && (
         <InterviewForm
           formData={formData}
           handleInterviewFromData={handleInterviewFromData}
           gotoNext={gotoNext}
         />
-      }
-      {progressSteps == 2 && 
+      )}
+      {progressSteps == 2 && (
         <QuestionList
           formData={formData}
           gotoPrevious={gotoPrevious}
           gotoNext={gotoNext}
+          onCreateLink={onCreateLink}
         />
-      }
+      )}
+      {progressSteps == 3 && (
+        <InterviewLink
+          gotoPrevious={gotoPrevious}
+          gotoNext={gotoNext}
+          interviewIdToLink={interviewIdToLink}
+          formData={formData}
+        />
+      )}
     </div>
   );
 }

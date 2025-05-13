@@ -8,7 +8,7 @@ import { useUser } from "@/provider/provider";
 import { v4 as uuidv4 } from "uuid";
 import { supabase } from "@/services/supabaseClient";
 
-function QuestionList({ formData, gotoPrevious, gotoNext }) {
+function QuestionList({ formData, gotoPrevious, gotoNext, onCreateLink }) {
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState({});
   const { user } = useUser();
@@ -49,6 +49,8 @@ function QuestionList({ formData, gotoPrevious, gotoNext }) {
         ])
         .select();
       setSaveQuestionsLoading(false);
+      
+      onCreateLink(id);
     } catch (error) {
       console.error(error);
     } finally {
@@ -85,7 +87,7 @@ function QuestionList({ formData, gotoPrevious, gotoNext }) {
           disabled={saveQuestionLoading}
         >
           {saveQuestionLoading && <Loader2Icon className="animate-spin" />}
-          Finish
+          Create interview link
         </Button>
       </div>
     </div>
