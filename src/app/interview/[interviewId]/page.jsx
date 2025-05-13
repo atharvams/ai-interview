@@ -1,18 +1,22 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Settings, Video } from "lucide-react";
 import { supabase } from "@/services/supabaseClient";
+import { InterviewDataContext } from "@/contexts/interviewDataContext";
+import { useRouter } from "next/navigation";
 
 function InterviewJoinPage() {
+
   const { interviewId } = useParams();
   const [userData, setUserData] = useState();
   const [dataLoading, setDataLoading] = useState(false);
   const [username, setUsername] = useState();
+  const { interviewData, setInterviewData } = useContext(InterviewDataContext);
+  const router = useRouter();
 
   console.log(interviewId[0]);
   useEffect(() => {
@@ -24,13 +28,29 @@ function InterviewJoinPage() {
   const getInterviewDetails = async () => {
     setDataLoading(true);
     try {
-      let { data: interviews, error } = await supabase
+      const { data: interviews, error } = await supabase
         .from("interviews")
         .select("jobPosition,interviewDuration")
         .eq("interviewId", interviewId[0]);
       console.log(interviews);
       setUserData(interviews[0]);
       setDataLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const joinInterview = async () => {
+    try {
+      setDataLoading(true);
+      const { data: interviews, error } = await supabase
+        .from("interviews")
+        .select("*")
+        .eq("interviewId", interviewId);
+
+      setInterviewData(interviews);
+      setDataLoading(false);
+      router.push("/interview/" + interviewId + "/start");
     } catch (error) {
       console.error(error);
     }
@@ -97,6 +117,7 @@ function InterviewJoinPage() {
         </div>
 
         <Button
+          onClick={joinInterview}
           className="mb-4 w-full bg-primary hover:bg-amber-600"
           disabled={dataLoading || !username}
         >
