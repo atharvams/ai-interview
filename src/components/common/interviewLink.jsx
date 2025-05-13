@@ -57,7 +57,7 @@ function InterviewLink({ interviewIdToLink, formData }) {
           <div className="px-3 py-2 truncate text-gray-600 text-sm">{link}</div>
           <Button
             onClick={copyLink}
-            className="rounded-l-none h-full bg-primary"
+            className="rounded-l-none h-full bg-primary cursor-pointer"
           >
             <span className="mr-2">Copy Link</span>
           </Button>
@@ -108,14 +108,14 @@ function InterviewLink({ interviewIdToLink, formData }) {
         <Button
           onClick={() => router.push("/dashboard")}
           variant="outline"
-          className="flex items-center justify-center"
+          className="flex items-center justify-center cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Dashboard
         </Button>
         <Button
           onClick={() => router.push("/dashboard/create-interview")}
-          className="bg-primary flex items-center justify-center"
+          className="bg-primary flex items-center justify-center cursor-pointer"
         >
           <Plus className="h-4 w-4 mr-2" />
           Create New Interview
