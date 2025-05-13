@@ -70,20 +70,20 @@ function CreateInterview() {
         <h2 className="font-bold text-2xl pl-3">Create new interview</h2>
       </div>
       <Progress value={progressSteps * 20} className="my-5" />
-      {progressSteps == 1 && (
+      {progressSteps == 1 && 
         <InterviewForm
           formData={formData}
           handleInterviewFromData={handleInterviewFromData}
           gotoNext={gotoNext}
         />
-      )}
-      {progressSteps == 2 && (
+      }
+      {progressSteps == 2 && 
         <QuestionList
           formData={formData}
           gotoPrevious={gotoPrevious}
           gotoNext={gotoNext}
         />
-      )}
+      }
     </div>
   );
 }
