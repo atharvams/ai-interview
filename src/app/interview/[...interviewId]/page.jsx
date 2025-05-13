@@ -1,15 +1,41 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Settings, Video } from "lucide-react";
+import { supabase } from "@/services/supabaseClient";
 
 function InterviewJoinPage() {
   const { interviewId } = useParams();
+  const [userData, setUserData] = useState();
+  const [dataLoading, setDataLoading] = useState(false);
+  const [username, setUsername] = useState();
+
   console.log(interviewId[0]);
+  useEffect(() => {
+    if (interviewId) {
+      getInterviewDetails();
+    }
+  }, []);
+
+  const getInterviewDetails = async () => {
+    setDataLoading(true);
+    try {
+      let { data: interviews, error } = await supabase
+        .from("interviews")
+        .select("jobPosition,interviewDuration")
+        .eq("interviewId", interviewId[0]);
+      console.log(interviews);
+      setUserData(interviews[0]);
+      setDataLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-sm">
@@ -20,10 +46,12 @@ function InterviewJoinPage() {
 
         <div className="mb-6 text-center">
           <h2 className="text-xl font-semibold text-gray-800">
-            Full Stack Developer Interview
+            {userData?.jobPosition}
           </h2>
           <div className="mt-2 flex items-center justify-center space-x-4 text-sm text-gray-500">
-            <div className="flex items-center">30 Minutes</div>
+            <div className="flex items-center">
+              {userData?.interviewDuration} Minutes
+            </div>
           </div>
         </div>
 
@@ -35,6 +63,9 @@ function InterviewJoinPage() {
             Enter your full name
           </label>
           <Input
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
             id="fullName"
             placeholder="e.g., John Smith"
             className="w-full"
@@ -65,7 +96,10 @@ function InterviewJoinPage() {
           </div>
         </div>
 
-        <Button className="mb-4 w-full bg-primary hover:bg-amber-600">
+        <Button
+          className="mb-4 w-full bg-primary hover:bg-amber-600"
+          disabled={dataLoading || !username}
+        >
           <Video className="mr-2 h-4 w-4" />
           Join Interview
         </Button>
