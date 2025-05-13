@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import QuestionContainer from "./questionContainer";
 import { useUser } from "@/provider/provider";
 import { v4 as uuidv4 } from "uuid";
+import { supabase } from "@/services/supabaseClient";
 
 function QuestionList({ formData, gotoPrevious, gotoNext }) {
   const [loading, setLoading] = useState(false);
@@ -47,6 +48,7 @@ function QuestionList({ formData, gotoPrevious, gotoNext }) {
           },
         ])
         .select();
+      setSaveQuestionsLoading(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -76,13 +78,9 @@ function QuestionList({ formData, gotoPrevious, gotoNext }) {
           </div>
           <div className="flex justify-center m-5">
             <Button
-              onClick={() => onFinish()}
+              onClick={onFinish}
               className={"w-full cursor-pointer"}
-              disable={saveQuestionLoading}
             >
-              {setSaveQuestionsLoading && (
-                <Loader2Icon className="animate-spin" />
-              )}
               Finish
             </Button>
           </div>
