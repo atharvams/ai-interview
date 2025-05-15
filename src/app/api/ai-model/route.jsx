@@ -1,4 +1,3 @@
-import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
 import { QuestionPrompt } from "@/services/constants";
 

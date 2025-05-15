@@ -17,10 +17,10 @@ function InterviewJoinPage() {
   const { interviewData, setInterviewData } = useContext(InterviewDataContext);
   const router = useRouter();
 
-  console.log(interviewId[0]);
   useEffect(() => {
     if (interviewId) {
       getInterviewDetails();
+      console.log("getInteriviewdetailsCalled");
     }
   }, []);
 
@@ -30,8 +30,8 @@ function InterviewJoinPage() {
       const { data: interviews, error } = await supabase
         .from("interviews")
         .select("jobPosition,interviewDuration")
-        .eq("interviewId", interviewId[0]);
-      console.log(interviews);
+        .eq("interviewId", interviewId);
+
       setUserData(interviews[0]);
       setDataLoading(false);
     } catch (error) {
@@ -46,17 +46,30 @@ function InterviewJoinPage() {
         .from("interviews")
         .select("*")
         .eq("interviewId", interviewId);
-
-      setInterviewData({
+      
+      if (error) throw error;
+      
+      // Update the context with the new data
+      const updatedData = {
         userName: username,
-        interviewData: interviews,
-      });
+        userInterviewData: interviews
+      };
+      
+      setInterviewData(updatedData);
       setDataLoading(false);
+      
+      // Use the local variable here instead of the state which hasn't updated yet
+      console.log("interview data");
+      console.log(updatedData);
+      
+      // Navigate to the next page
       router.push("/interview/" + interviewId + "/start");
     } catch (error) {
       console.error(error);
+      setDataLoading(false);
     }
   };
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">

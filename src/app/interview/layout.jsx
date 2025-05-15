@@ -3,7 +3,10 @@ import { InterviewDataContext } from "@/contexts/interviewDataContext";
 import React, { useState } from "react";
 
 function Layout({ children }) {
-  const [interviewData, setInterviewData] = useState(null);
+  const [interviewData, setInterviewData] = useState({
+    userName: "",
+    userInterviewData: [],
+  });
   return (
     <>
       <InterviewDataContext.Provider
