@@ -46,30 +46,27 @@ function InterviewJoinPage() {
         .from("interviews")
         .select("*")
         .eq("interviewId", interviewId);
-      
+
       if (error) throw error;
-      
-      // Update the context with the new data
+
       const updatedData = {
         userName: username,
-        userInterviewData: interviews
+        userInterviewData: interviews,
       };
-      
+      console.log(updatedData);
+
       setInterviewData(updatedData);
       setDataLoading(false);
-      
-      // Use the local variable here instead of the state which hasn't updated yet
+
       console.log("interview data");
       console.log(updatedData);
-      
-      // Navigate to the next page
+
       router.push("/interview/" + interviewId + "/start");
     } catch (error) {
       console.error(error);
       setDataLoading(false);
     }
   };
-  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">

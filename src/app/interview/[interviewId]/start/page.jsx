@@ -7,7 +7,7 @@ import AlertDialogue from "@/components/common/alertDialogue";
 
 function JoinMeeting() {
   const [isMuted, setIsMuted] = useState(false);
-  const [timer, setTimer] = useState("00:05:00");
+  const [timer, setTimer] = useState("00:00:00");
   const { interviewData } = useContext(InterviewDataContext);
   const apiKey = process.env.NEXT_PUBLIC_VAPI_API_KEY || "";
   const [vapi, setVapi] = useState(null);
@@ -95,7 +95,6 @@ function JoinMeeting() {
         });
     }
 
-    // Cleanup function
     return () => {
       if (vapiInstance) {
         vapiInstance.stop();
@@ -165,15 +164,40 @@ function JoinMeeting() {
     vapi.start(modifiedAssistantOption);
   };
 
+  useEffect(() => {
+    let interval;
+    const totalSeconds =
+      Number(interviewData.userInterviewData[0].interviewDuration) * 60;
+
+    let remainingSeconds = totalSeconds;
+
+    if (isConnected) {
+      interval = setInterval(() => {
+        if (remainingSeconds > 0) {
+          remainingSeconds -= 1;
+
+          const minutes = String(Math.floor(remainingSeconds / 60)).padStart(
+            2,
+            "0"
+          );
+          const seconds = String(remainingSeconds % 60).padStart(2, "0");
+
+          setTimer(`00:${minutes}:${seconds}`);
+        } else {
+          clearInterval(interval);
+          setTimer("00:00:00");
+          endCall(); // Automatically end the call once timer is off
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [isConnected]);
+
   const endCall = () => {
     if (vapi) {
       vapi.stop();
     }
-  };
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-    // Implement the actual mute functionality with Vapi if it has such an API
   };
 
   return (
@@ -236,20 +260,6 @@ function JoinMeeting() {
                 {isConnecting ? "Connecting..." : "Start Interview"}
               </button>
             )}
-
-            {/* {isConnected && (
-              <button
-                onClick={toggleMute}
-                className="w-12 h-12 rounded-full bg-[#2a2f38] flex items-center justify-center hover:bg-[#3a3f48] transition-colors cursor-pointer"
-                aria-label="Microphone"
-              >
-                {isMuted ? (
-                  <MicOff className="w-5 h-5 text-white" />
-                ) : (
-                  <Mic className="w-5 h-5 text-white" />
-                )}
-              </button>
-            )} */}
 
             <AlertDialogue stopInterview={endCall}>
               <h2 className="w-12 h-12 rounded-full bg-[#f13b3b] flex items-center justify-center hover:bg-[#e03030] transition-colors cursor-pointer">
